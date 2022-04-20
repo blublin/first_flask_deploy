@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Create model</title>
+</head>
+<body>
+    <div class="container">
+
+        <div class="nav d-flex justify-content-between">
+            <h1 class="col">{% if recipe %}Edit Recipe{% else %}Add a Recipe{% endif %}</h1>
+            <div class="col d-flex justify-content-end">
+                <a href="/dashboard"><button class="btn btn-secondary btn-sm">Dashboard</button></a>
+                <a href="/logout"><button class="btn btn-secondary btn-sm">Logout</button></a>
+            </div>
+        </div>
+
+        {% if recipe %}
+        <form action="/recipes/update" method="POST" class="p-3 col-4 mx-auto my-5 bg-dark text-light">
+        {% else %}
+        <form action="/recipes/create" method="POST" class="p-3 col-4 mx-auto my-5 bg-dark text-light">
+        {% endif %}
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control mb-2" id="name" name="name"
+                {% if recipe %}value="{{recipe.name}}"{% endif %} required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <input type="text" class="form-control mb-2" id="description" name="description"
+                {% if recipe %}value="{{recipe.description}}"{% endif %}required>
+            </div>
+            <div class="form-group">
+                <label for="instructions">Instructions</label>
+                <textarea class="form-control mb-3" name="instructions" id="instructions" rows="5"
+                required>{% if recipe %}{{recipe.instructions}}{% endif %}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="origin_date">Original Creation Date:</label>
+                <input type="date" class="form-control mb-2" id="origin_date"
+                {% if recipe %}value="{{recipe.origin_date}}"{% endif %} name="origin_date" required>
+            </div>
+            <p class="mb-0">Under 30 Minutes?</p>
+            <div class="form-group form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="under_30" id="inlineRadio1" value="1"
+                {% if recipe %}{% if recipe.under_30 == 1 %}checked{% endif %}{% endif %}>
+                <label class="form-check-label" for="inlineRadio1">Yes</label>
+            </div>
+            <div class="form-group form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="under_30" id="inlineRadio2" value="0"
+                {% if recipe %}{% if recipe.under_30 == 0 %}checked{% endif %}{% endif %}>
+                <label class="form-check-label" for="inlineRadio2">No</label>
+            </div>
+            <div class="form-group mt-3">
+                {% if recipe %}
+                <input type="hidden" name="user_id" value="{{session['user_id']}}">
+                <input type="hidden" name="id" value="{{recipe.id}}">
+                {% endif %}
+                <input type="submit" class="shadow btn border btn-default bg-secondary text-light"
+                {% if recipe %}value="Update"{% else %}value="Create"{% endif %}>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
